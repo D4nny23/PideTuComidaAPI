@@ -35,7 +35,14 @@ public class DAOImplementation implements DAOInterface,AutoCloseable{
         ArrayList<Producto> productos= new ArrayList<>();
         Producto p= null;
         String sql="Select idProducto, nombre, idIngrediente, precio from productos";
-        
+        try (Statement stm= con.createStatement();
+            ResultSet rs= stm.executeQuery(sql);){
+            while(rs.next()){
+                p= new Producto(rs.getInt(1), rs.getString(2), rs.getInt(3), rs.getDouble(4));
+                productos.add(p);
+            }
+        } catch (Exception e) {
+        }
         return productos;
     }
 
