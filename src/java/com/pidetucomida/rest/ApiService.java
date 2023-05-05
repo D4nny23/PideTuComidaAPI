@@ -17,11 +17,12 @@ import java.util.ArrayList;
  * @author dev
  */
 
-@Path("productos")
+@Path("/api")
 public class ApiService {
     
+    @Path("/productos")
     @GET
-    @Produces(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_XML)
     public ArrayList<Producto>getProducto(){
         ArrayList<Producto> productos=null;
         Producto p= null;
