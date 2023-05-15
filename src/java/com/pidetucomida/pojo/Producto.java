@@ -9,18 +9,27 @@ package com.pidetucomida.pojo;
  * @author dev
  */
 public class Producto {
+    private String ruta;
     private int idProducto;
     private String nombre;
     private int idIngrediente;
     private double precio;
 
+    public Producto(String ruta, int idProducto, String nombre, int idIngrediente, double precio) {
+        this.ruta = ruta;
+        this.idProducto = idProducto;
+        this.nombre = nombre;
+        this.idIngrediente = idIngrediente;
+        this.precio = precio;
+    }
+    
     public Producto(int idProducto, String nombre, int idIngrediente, double precio) {
         this.idProducto = idProducto;
         this.nombre = nombre;
         this.idIngrediente = idIngrediente;
         this.precio = precio;
     }
-
+    
     public double getPrecio() {
         return precio;
     }
@@ -52,7 +61,13 @@ public class Producto {
     public void setIdIngrediente(int idIngrediente) {
         this.idIngrediente = idIngrediente;
     }
-    
-    
+
+    public String getRuta() {
+        return ruta;
+    }
+
+    public void setRuta(String ruta) {
+        this.ruta = ruta;
+    }
     
 }

@@ -8,6 +8,7 @@ import com.pidetucomida.interfaces.DAOInterface;
 import com.pidetucomida.pojo.Cliente;
 import com.pidetucomida.pojo.Producto;
 import java.io.File;
+import java.io.FileInputStream;
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -93,7 +94,7 @@ public class DAOImplementation implements DAOInterface, AutoCloseable {
     public ArrayList<Producto> getProductosPorTipo(String tipo) throws Exception {
         ArrayList<Producto> productos = new ArrayList<>();
         Producto p = null;
-        String sql = "Select idProducto, nombre, idIngrediente, precio from productos where tipo ='"+tipo+"'";
+        String sql = "Select idProducto, nombre, idIngrediente, precio from productos where tipo ='" + tipo + "'";
         try (Statement stm = con.createStatement(); ResultSet rs = stm.executeQuery(sql);) {
             while (rs.next()) {
                 p = new Producto(rs.getInt(1), rs.getString(2), rs.getInt(3), rs.getDouble(4));
@@ -106,8 +107,31 @@ public class DAOImplementation implements DAOInterface, AutoCloseable {
 
     @Override
     public void insertaProducto(Producto p) throws Exception {
-        
+//        File fichero = new File(p.getRuta());//digo que fichero es y directorio
+//        if (fichero.exists()) {
+//            FileInputStream ficheroIn = new FileInputStream(fichero);//con esto leeré el fichero para convertirlo en un array de bytes
+//            long bytes = fichero.length();//cojo la longitud del fichero
+//            byte[] buff = new byte[(int) bytes];//creo un array de bytes de la misma longitud
+//            int i, j = 0;//declaro variables
+//            System.out.println("Lo recorro y lo meto en un buffer");
+//            while ((i = ficheroIn.read()) != -1) {//leo el fichero y lo guardo en un arrray de bytes
+//                buff[j] = (byte) i;
+//                j++;
+//            }
+//            String sql = "Insert into producto values(?,?,?,?,?,?,?)";
+//            try (PreparedStatement stm = con.prepareStatement(sql)) {
+//            stm.setInt(1, c.getIdCliente());
+//            stm.setString(2, c.getCorreo());
+//            stm.setString(3, c.getPass());
+//            stm.setString(4, c.getNombre());
+//            stm.setString(5, c.getApellido());
+//            stm.setString(6, c.getDireccionEnvio());
+//            stm.setString(7, c.getTelefono());
+//            stm.executeUpdate();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//
+//        }
     }
-    
-    
 }
