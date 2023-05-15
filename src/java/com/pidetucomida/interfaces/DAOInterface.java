@@ -4,7 +4,9 @@
  */
 package com.pidetucomida.interfaces;
 
+import com.pidetucomida.pojo.Cliente;
 import com.pidetucomida.pojo.Producto;
+import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -13,4 +15,8 @@ import java.util.ArrayList;
  */
 public interface DAOInterface {
     public ArrayList<Producto> devuelveProductos() throws Exception;
+    public boolean insertaCliente(Cliente c) throws Exception;
+    public Cliente devuelveCliente(String correo) throws Exception;
+    public ArrayList<Producto> getProductosPorTipo(String tipo) throws Exception;
+    public void insertaProducto(Producto p) throws Exception;
 }
