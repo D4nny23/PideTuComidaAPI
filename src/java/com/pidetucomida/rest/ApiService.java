@@ -20,64 +20,79 @@ import java.util.ArrayList;
  *
  * @author dev
  */
-
 @Path("/api")
 public class ApiService {
-    
+
     @Path("/productos")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public ArrayList<Producto>getProducto(){
-        ArrayList<Producto> productos=null;
-        Producto p= null;
-        try (DAOImplementation imp=new DAOImplementation()){
-            productos= imp.devuelveProductos();
+    public ArrayList<Producto> getProducto() {
+        ArrayList<Producto> productos = null;
+        Producto p = null;
+        try (DAOImplementation imp = new DAOImplementation()) {
+            productos = imp.devuelveProductos();
         } catch (Exception e) {
             e.printStackTrace();
         }
         return productos;
     }
-    
-    
+
     @Path("/insert")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public boolean setUser(Cliente c) {
-        boolean insertado= false;
+        boolean insertado = false;
         try (DAOImplementation ui = new DAOImplementation();) {
-        insertado=ui.insertaCliente(c);
+            insertado = ui.insertaCliente(c);
         } catch (Exception e) {
             e.printStackTrace();
         }
         return insertado;
-    };
+    }
+
+    ;
     
     
     @Path("/cliente/{correo}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Cliente getProducto(@PathParam("correo") String correo){
-        Cliente c= null;
-        try (DAOImplementation imp=new DAOImplementation()){
+    public Cliente getProducto(@PathParam("correo") String correo) {
+        Cliente c = null;
+        try (DAOImplementation imp = new DAOImplementation()) {
             c = imp.devuelveCliente(correo);
         } catch (Exception e) {
             e.printStackTrace();
         }
         return c;
     }
-    
+
     @Path("/productos/{tipo}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public ArrayList<Producto>getProductPorTipo(@PathParam("tipo") String tipo){
-        ArrayList<Producto> productos=null;
-        Producto p= null;
-        try (DAOImplementation imp=new DAOImplementation()){
-            productos= imp.getProductosPorTipo(tipo);
+    public ArrayList<Producto> getProductPorTipo(@PathParam("tipo") String tipo) {
+        ArrayList<Producto> productos = null;
+        Producto p = null;
+        try (DAOImplementation imp = new DAOImplementation()) {
+            productos = imp.getProductosPorTipo(tipo);
         } catch (Exception e) {
             e.printStackTrace();
         }
         return productos;
     }
-    
+//{"ruta":"/home/dev/Documentos/RelacionalV1.png","nombre":"Cheeseburger","idIngrediente":1,"precio":12.0, "tipo":"Hamburguesa"}
+
+    @Path("/productos/insert")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    public boolean setProducto(Producto p) {
+        boolean insertado = false;
+        try (DAOImplementation ui = new DAOImplementation();) {
+            insertado = ui.insertaProducto(p);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return insertado;
+    }
+;
+
 }

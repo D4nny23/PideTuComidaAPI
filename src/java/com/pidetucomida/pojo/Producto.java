@@ -13,14 +13,31 @@ public class Producto {
     private int idProducto;
     private String nombre;
     private int idIngrediente;
+    private byte[] img;
     private double precio;
+    private String tipo;
+    
+    public Producto(){
+        
+    }
 
-    public Producto(String ruta, int idProducto, String nombre, int idIngrediente, double precio) {
+    public Producto(int idProducto, String nombre, int idIngrediente, byte[] img, double precio, String tipo) {
+        this.idProducto = idProducto;
+        this.nombre = nombre;
+        this.idIngrediente = idIngrediente;
+        this.img = img;
+        this.precio = precio;
+        this.tipo = tipo;
+    }
+    
+
+    public Producto(String ruta, int idProducto, String nombre, int idIngrediente, double precio, String tipo) {
         this.ruta = ruta;
         this.idProducto = idProducto;
         this.nombre = nombre;
         this.idIngrediente = idIngrediente;
         this.precio = precio;
+        this.tipo=tipo;
     }
     
     public Producto(int idProducto, String nombre, int idIngrediente, double precio) {
@@ -30,6 +47,10 @@ public class Producto {
         this.precio = precio;
     }
     
+    @Override
+    public String toString() {
+        return "Producto{" + "ruta=" + ruta + ", idProducto=" + idProducto + ", nombre=" + nombre + ", idIngrediente=" + idIngrediente + ", precio=" + precio + ", tipo=" + tipo + '}';
+    }
     public double getPrecio() {
         return precio;
     }
@@ -68,6 +89,22 @@ public class Producto {
 
     public void setRuta(String ruta) {
         this.ruta = ruta;
+    }
+
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
+
+    public byte[] getImg() {
+        return img;
+    }
+
+    public void setImg(byte[] img) {
+        this.img = img;
     }
     
 }
