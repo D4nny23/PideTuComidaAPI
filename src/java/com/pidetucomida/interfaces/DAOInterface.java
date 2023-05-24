@@ -13,9 +13,17 @@ import java.util.ArrayList;
  * @author dev
  */
 public interface DAOInterface {
-    public ArrayList<Producto> devuelveProductos() throws Exception;
+
+    public ArrayList<Producto> getProductos() throws Exception;
+
     public boolean insertaCliente(Cliente c) throws Exception;
+
     public Cliente devuelveCliente(String correo) throws Exception;
+
     public ArrayList<Producto> getProductosPorTipo(String tipo) throws Exception;
-    public boolean insertaProducto(Producto p) throws Exception;
+
+    public String insertaProducto(Producto p) throws Exception;
+
+    public Producto getProductoPorId(int id) throws Exception;
+
 }

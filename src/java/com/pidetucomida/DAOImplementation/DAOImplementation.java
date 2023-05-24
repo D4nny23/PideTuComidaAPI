@@ -34,7 +34,7 @@ public class DAOImplementation implements DAOInterface, AutoCloseable {
     }
 
     @Override
-    public ArrayList<Producto> devuelveProductos() throws Exception {
+    public ArrayList<Producto> getProductos() throws Exception {
         ArrayList<Producto> productos = new ArrayList<>();
         Producto p = null;
         String sql = "Select idProducto, nombre, idIngrediente, img, precio, tipo from productos";
@@ -110,10 +110,11 @@ public class DAOImplementation implements DAOInterface, AutoCloseable {
     }
 
     @Override
-    public boolean insertaProducto(Producto p) throws Exception {
-        boolean insertado = false;
+    public String insertaProducto(Producto p) throws Exception {
+        String insertado ="No insertado";
         String sql = "Insert into productos(img ,nombre, idIngrediente, precio, tipo) values(?,?,?,?,?)";
         try (PreparedStatement stm = con.prepareStatement(sql)) {
+            insertado= p.toString();
             File fichero = new File(p.getRuta());//digo que fichero es y directorio
             byte[] buff = null;
             if (fichero.exists()) {
@@ -135,13 +136,29 @@ public class DAOImplementation implements DAOInterface, AutoCloseable {
             stm.setString(5, p.getTipo());
             stm.executeUpdate();
             System.out.println(p.toString());
-            insertado = true;
+            insertado = "Insertado";
 
         } catch (Exception e) {
             e.printStackTrace();
+            insertado= e.getMessage();
         }
         return insertado;
 
+    }
+    
+    @Override
+    public Producto getProductoPorId(int id) throws Exception {
+        Producto p = null;
+        String sql = "Select idProducto, nombre, idIngrediente, img, precio, tipo from productos where idProducto ="+ id ;
+        try (Statement stm = con.createStatement(); ResultSet rs = stm.executeQuery(sql);) {
+            while (rs.next()) {
+                Blob blob = rs.getBlob(4);
+                byte[] bytes = blob.getBytes(1, (int) blob.length());
+                p = new Producto(rs.getInt(1), rs.getString(2), rs.getInt(3), bytes, rs.getDouble(5), rs.getString(6));
+            }
+        } catch (Exception e) {
+        }
+        return p;
     }
 
 }

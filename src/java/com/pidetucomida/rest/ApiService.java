@@ -30,7 +30,7 @@ public class ApiService {
         ArrayList<Producto> productos = null;
         Producto p = null;
         try (DAOImplementation imp = new DAOImplementation()) {
-            productos = imp.devuelveProductos();
+            productos = imp.getProductos();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -74,6 +74,7 @@ public class ApiService {
         Producto p = null;
         try (DAOImplementation imp = new DAOImplementation()) {
             productos = imp.getProductosPorTipo(tipo);
+            System.out.println(productos.toString());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -84,15 +85,28 @@ public class ApiService {
     @Path("/productos/insert")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public boolean setProducto(Producto p) {
-        boolean insertado = false;
+    public String setProducto(Producto p) {
+        String insertado = "No insertado";
         try (DAOImplementation ui = new DAOImplementation();) {
             insertado = ui.insertaProducto(p);
         } catch (Exception e) {
             e.printStackTrace();
         }
         return insertado;
+    };
+    
+    @Path("/productos/id/{id}")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Producto getProductoPorId(@PathParam("id") int id) {
+        Producto p = null;
+        try (DAOImplementation imp = new DAOImplementation()) {
+            p = imp.getProductoPorId(id);
+           // System.out.println("PRODUCTO POR ID:" + p.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return p;
     }
-;
 
 }
