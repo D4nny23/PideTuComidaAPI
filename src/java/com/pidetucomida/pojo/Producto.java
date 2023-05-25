@@ -12,7 +12,7 @@ public class Producto {
     private String ruta;
     private int idProducto;
     private String nombre;
-    private int idIngrediente;
+    private String descripcion;
     private byte[] img;
     private double precio;
     private String tipo;
@@ -21,35 +21,35 @@ public class Producto {
         
     }
 
-    public Producto(int idProducto, String nombre, int idIngrediente, byte[] img, double precio, String tipo) {
+    public Producto(int idProducto, String nombre, String descripcion, byte[] img, double precio, String tipo) {
         this.idProducto = idProducto;
         this.nombre = nombre;
-        this.idIngrediente = idIngrediente;
+        this.descripcion = descripcion;
         this.img = img;
         this.precio = precio;
         this.tipo = tipo;
     }
     
 
-    public Producto(String ruta, int idProducto, String nombre, int idIngrediente, double precio, String tipo) {
+    public Producto(String ruta, int idProducto, String nombre, String descripcion, double precio, String tipo) {
         this.ruta = ruta;
         this.idProducto = idProducto;
         this.nombre = nombre;
-        this.idIngrediente = idIngrediente;
+        this.descripcion = descripcion;
         this.precio = precio;
         this.tipo=tipo;
     }
     
-    public Producto(int idProducto, String nombre, int idIngrediente, double precio) {
+    public Producto(int idProducto, String nombre, String descripcion, double precio) {
         this.idProducto = idProducto;
         this.nombre = nombre;
-        this.idIngrediente = idIngrediente;
+        this.descripcion = descripcion;
         this.precio = precio;
     }
     
     @Override
     public String toString() {
-        return "Producto{" + "ruta=" + ruta + ", idProducto=" + idProducto + ", nombre=" + nombre + ", idIngrediente=" + idIngrediente + ", precio=" + precio + ", tipo=" + tipo + '}';
+        return "Producto{" + "ruta=" + ruta + ", idProducto=" + idProducto + ", nombre=" + nombre + ", descripcion=" + descripcion + ", precio=" + precio + ", tipo=" + tipo + '}';
     }
     public double getPrecio() {
         return precio;
@@ -75,12 +75,12 @@ public class Producto {
         this.nombre = nombre;
     }
 
-    public int getIdIngrediente() {
-        return idIngrediente;
+    public String getDescripcion() {
+        return descripcion;
     }
 
-    public void setIdIngrediente(int idIngrediente) {
-        this.idIngrediente = idIngrediente;
+    public void setDescripcion(String idIngrediente) {
+        this.descripcion = idIngrediente;
     }
 
     public String getRuta() {

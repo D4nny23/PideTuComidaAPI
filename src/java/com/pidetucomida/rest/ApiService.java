@@ -5,14 +5,8 @@
 package com.pidetucomida.rest;
 
 import com.pidetucomida.DAOImplementation.DAOImplementation;
-import com.pidetucomida.pojo.Producto;
-import com.pidetucomida.pojo.Cliente;
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.PathParam;
-import jakarta.ws.rs.Produces;
+import com.pidetucomida.pojo.*;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import java.util.ArrayList;
 
@@ -93,7 +87,9 @@ public class ApiService {
             e.printStackTrace();
         }
         return insertado;
-    };
+    }
+
+    ;
     
     @Path("/productos/id/{id}")
     @GET
@@ -102,11 +98,24 @@ public class ApiService {
         Producto p = null;
         try (DAOImplementation imp = new DAOImplementation()) {
             p = imp.getProductoPorId(id);
-           // System.out.println("PRODUCTO POR ID:" + p.toString());
+            // System.out.println("PRODUCTO POR ID:" + p.toString());
         } catch (Exception e) {
             e.printStackTrace();
         }
         return p;
     }
 
+    @Path("/ingredientes/{id}")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public ArrayList<Ingrediente> geIngredientesPorIdProducto(@PathParam("id") int id) {
+        ArrayList<Ingrediente> ingredientes = null;
+        try (DAOImplementation imp = new DAOImplementation()) {
+            ingredientes = imp.getIngredientesPorProductId(id);
+            System.out.println(ingredientes.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ingredientes;
+    } 
 }

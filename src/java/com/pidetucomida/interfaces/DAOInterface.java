@@ -4,8 +4,7 @@
  */
 package com.pidetucomida.interfaces;
 
-import com.pidetucomida.pojo.Cliente;
-import com.pidetucomida.pojo.Producto;
+import com.pidetucomida.pojo.*;
 import java.util.ArrayList;
 
 /**
@@ -25,5 +24,7 @@ public interface DAOInterface {
     public String insertaProducto(Producto p) throws Exception;
 
     public Producto getProductoPorId(int id) throws Exception;
+    
+    public ArrayList<Ingrediente> getIngredientesPorProductId(int id)throws Exception;
 
 }
