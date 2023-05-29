@@ -5,9 +5,7 @@
 package com.pidetucomida.DAOImplementation;
 
 import com.pidetucomida.interfaces.DAOInterface;
-import com.pidetucomida.pojo.Cliente;
-import com.pidetucomida.pojo.Ingrediente;
-import com.pidetucomida.pojo.Producto;
+import com.pidetucomida.pojo.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.sql.*;
@@ -167,15 +165,51 @@ public class DAOImplementation implements DAOInterface, AutoCloseable {
         ArrayList<Ingrediente> ingredientes = new ArrayList<>();
         Ingrediente i = null;
         String sql = "select idIngrediente, nombre from ingredientes where idIngrediente in(\n"
-                + "select idIngrediente from ingrediente_producto where idProducto=" + id+")";
+                + "select idIngrediente from ingrediente_producto where idProducto=" + id + ")";
         try (Statement stm = con.createStatement(); ResultSet rs = stm.executeQuery(sql);) {
             while (rs.next()) {
-                i= new Ingrediente(rs.getInt(1), rs.getString(2));
+                i = new Ingrediente(rs.getInt(1), rs.getString(2));
                 ingredientes.add(i);
             }
         } catch (Exception e) {
         }
         return ingredientes;
+    }
+
+    @Override
+    public int insertaPedido(Pedido p) throws Exception {
+        int idPedido = 0;
+        String sql = "INSERT INTO pedidos(idCliente) VALUES(?)";
+        try (PreparedStatement stm = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            stm.setInt(1, p.getIdCliente());
+            stm.executeUpdate();
+
+            try (ResultSet rs = stm.getGeneratedKeys()) {
+                if (rs.next()) {
+                    idPedido = rs.getInt(1);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return idPedido;
+    }
+
+    @Override
+    public boolean insertaProductosPedido(Productos_pedido pp) throws Exception {
+        boolean insertado = false;
+        String sql = "Insert into productos_pedido(idPedido, idProducto, cantidad, precio) values(?,?,?,?)";
+        try (PreparedStatement stm = con.prepareStatement(sql)) {
+            stm.setInt(1, pp.getIdPedido());
+            stm.setInt(2, pp.getIdProducto());
+            stm.setInt(3, pp.getCantidad());
+            stm.setDouble(4, pp.getPrecio());
+            stm.executeUpdate();
+            insertado = true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return insertado;
     }
 
 }

@@ -17,6 +17,11 @@ public class Cliente {
    private String direccionEnvio;
    private String telefono;
 
+    @Override
+    public String toString() {
+        return "Cliente{" + "idCliente=" + idCliente + ", correo=" + correo + ", pass=" + pass + ", nombre=" + nombre + ", apellido=" + apellido + ", direccionEnvio=" + direccionEnvio + ", telefono=" + telefono + '}';
+    }
+
     public Cliente() {
     }
 

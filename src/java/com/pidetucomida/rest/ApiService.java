@@ -54,6 +54,7 @@ public class ApiService {
         Cliente c = null;
         try (DAOImplementation imp = new DAOImplementation()) {
             c = imp.devuelveCliente(correo);
+            System.out.println(c.toString());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -117,5 +118,33 @@ public class ApiService {
             e.printStackTrace();
         }
         return ingredientes;
-    } 
+    }
+    
+    @Path("/pedido/insert")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    public int setPedido(Pedido p) {
+        int insertado = 0;
+        try (DAOImplementation ui = new DAOImplementation();) {
+            insertado = ui.insertaPedido(p);
+            System.out.println("IDPEDIDO:::::::::::: "+ insertado);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return insertado;
+    }
+    
+    @Path("/productos_pedido/insert")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    public boolean setProducto_Pedido(Productos_pedido pp) {
+        boolean insertado = false;
+        try (DAOImplementation ui = new DAOImplementation();) {
+            insertado = ui.insertaProductosPedido(pp);
+            System.out.println("PRODUCTOS_PEDIDO:::::::::::: "+ insertado);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return insertado;
+    }
 }

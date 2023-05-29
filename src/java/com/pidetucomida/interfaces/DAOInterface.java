@@ -27,4 +27,7 @@ public interface DAOInterface {
     
     public ArrayList<Ingrediente> getIngredientesPorProductId(int id)throws Exception;
 
+    public int insertaPedido(Pedido p) throws Exception;
+    
+    public boolean insertaProductosPedido(Productos_pedido pp) throws Exception;
 }
