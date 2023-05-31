@@ -9,7 +9,10 @@ import com.pidetucomida.pojo.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.sql.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -36,7 +39,7 @@ public class DAOImplementation implements DAOInterface, AutoCloseable {
     public ArrayList<Producto> getProductos() throws Exception {
         ArrayList<Producto> productos = new ArrayList<>();
         Producto p = null;
-        String sql = "Select idProducto, nombre, descripcion, img, precio, tipo from productos";
+        String sql = "Select idProducto, nombre, descripcion, img, precio, tipo from producto";
         try (Statement stm = con.createStatement(); ResultSet rs = stm.executeQuery(sql);) {
             while (rs.next()) {
                 Blob blob = rs.getBlob(4);
@@ -95,7 +98,7 @@ public class DAOImplementation implements DAOInterface, AutoCloseable {
     public ArrayList<Producto> getProductosPorTipo(String tipo) throws Exception {
         ArrayList<Producto> productos = new ArrayList<>();
         Producto p = null;
-        String sql = "Select idProducto, nombre, descripcion, img, precio, tipo from productos where tipo ='" + tipo + "'";
+        String sql = "Select idProducto, nombre, descripcion, img, precio, tipo from producto where tipo ='" + tipo + "'";
         try (Statement stm = con.createStatement(); ResultSet rs = stm.executeQuery(sql);) {
             while (rs.next()) {
                 Blob blob = rs.getBlob(4);
@@ -111,7 +114,7 @@ public class DAOImplementation implements DAOInterface, AutoCloseable {
     @Override
     public String insertaProducto(Producto p) throws Exception {
         String insertado = "No insertado";
-        String sql = "Insert into productos(img ,nombre, descripcion, precio, tipo) values(?,?,?,?,?)";
+        String sql = "Insert into producto(img ,nombre, descripcion, precio, tipo) values(?,?,?,?,?)";
         try (PreparedStatement stm = con.prepareStatement(sql)) {
             insertado = p.toString();
             File fichero = new File(p.getRuta());//digo que fichero es y directorio
@@ -148,7 +151,7 @@ public class DAOImplementation implements DAOInterface, AutoCloseable {
     @Override
     public Producto getProductoPorId(int id) throws Exception {
         Producto p = null;
-        String sql = "Select idProducto, nombre, descripcion, img, precio, tipo from productos where idProducto =" + id;
+        String sql = "Select idProducto, nombre, descripcion, img, precio, tipo from producto where idProducto =" + id;
         try (Statement stm = con.createStatement(); ResultSet rs = stm.executeQuery(sql);) {
             while (rs.next()) {
                 Blob blob = rs.getBlob(4);
@@ -164,8 +167,7 @@ public class DAOImplementation implements DAOInterface, AutoCloseable {
     public ArrayList<Ingrediente> getIngredientesPorProductId(int id) throws Exception {
         ArrayList<Ingrediente> ingredientes = new ArrayList<>();
         Ingrediente i = null;
-        String sql = "select idIngrediente, nombre from ingredientes where idIngrediente in(\n"
-                + "select idIngrediente from ingrediente_producto where idProducto=" + id + ")";
+        String sql = "select idIngrediente, nombre from ingrediente where idIngrediente in (select idIngrediente from ingrediente_producto where idProducto = " + id + ")";
         try (Statement stm = con.createStatement(); ResultSet rs = stm.executeQuery(sql);) {
             while (rs.next()) {
                 i = new Ingrediente(rs.getInt(1), rs.getString(2));
@@ -179,7 +181,7 @@ public class DAOImplementation implements DAOInterface, AutoCloseable {
     @Override
     public int insertaPedido(Pedido p) throws Exception {
         int idPedido = 0;
-        String sql = "INSERT INTO pedidos(idCliente) VALUES(?)";
+        String sql = "INSERT INTO pedido(idCliente) VALUES(?)";
         try (PreparedStatement stm = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stm.setInt(1, p.getIdCliente());
             stm.executeUpdate();
@@ -198,7 +200,7 @@ public class DAOImplementation implements DAOInterface, AutoCloseable {
     @Override
     public boolean insertaProductosPedido(Productos_pedido pp) throws Exception {
         boolean insertado = false;
-        String sql = "Insert into productos_pedido(idPedido, idProducto, cantidad, precio) values(?,?,?,?)";
+        String sql = "Insert into producto_pedido(idPedido, idProducto, cantidad, precio) values(?,?,?,?)";
         try (PreparedStatement stm = con.prepareStatement(sql)) {
             stm.setInt(1, pp.getIdPedido());
             stm.setInt(2, pp.getIdProducto());
@@ -210,6 +212,45 @@ public class DAOImplementation implements DAOInterface, AutoCloseable {
             e.printStackTrace();
         }
         return insertado;
+    }
+
+    @Override
+    public ArrayList<Pedido> getPedidos() throws Exception {
+        ArrayList<Pedido> pedidos = new ArrayList<>();
+        Pedido p;
+        String sql = "SELECT idPedido, idCliente, fechaPedido, finalizado from pedido;";
+        try (Statement stm = con.createStatement(); ResultSet rs = stm.executeQuery(sql);) {
+            while (rs.next()) {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                p = new Pedido(rs.getInt("idPedido"), rs.getInt("idCliente"), LocalDateTime.parse(rs.getString("fechaPedido"), formatter), rs.getInt("finalizado"));
+//                p = new Pedido(rs.getInt("idPedido"), rs.getInt("idCliente"), LocalDateTime.parse(rs.getString("fechaPedido")), rs.getInt("finalizado"));
+                pedidos.add(p);
+            }
+            return pedidos;
+        }
+    }
+
+    public List<Object[]> getPedidoClienteInfo() throws SQLException {
+        List<Object[]> results = new ArrayList<>();
+//        String sql = "SELECT p.idPedido, p.fechaPedido, c.nombre AS nombreCliente, c.direccionEnvio, c.telefono FROM pedido p INNER JOIN cliente c ON p.idCliente = c.idCliente";
+        String sql = "SELECT p.idPedido, p.fechaPedido, c.nombre, c.direccionEnvio, c.telefono FROM pedido p INNER JOIN cliente c ON p.idCliente = c.idCliente;";
+
+        try (
+                Statement stmt = con.createStatement();
+                ResultSet rs = stmt.executeQuery(sql)) {
+
+            while (rs.next()) {
+                Object[] row = new Object[5];
+                row[0] = rs.getInt("idPedido");
+                row[1] = rs.getTimestamp("fechaPedido");
+                row[2] = rs.getString("nombre");
+                row[3] = rs.getString("direccionEnvio");
+                row[4] = rs.getString("telefono");
+                results.add(row);
+            }
+        }
+
+        return results;
     }
 
 }
