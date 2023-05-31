@@ -9,6 +9,7 @@ import com.pidetucomida.pojo.*;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -29,6 +30,20 @@ public class ApiService {
             e.printStackTrace();
         }
         return productos;
+    }
+
+    @Path("/pedidos")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<Object[]> getPedido() {
+        List<Object[]> pedidos = null;
+        Pedido p = null;
+        try (DAOImplementation imp = new DAOImplementation()) {
+            pedidos = imp.getPedidoClienteInfo();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return pedidos;
     }
 
     @Path("/insert")
@@ -119,7 +134,7 @@ public class ApiService {
         }
         return ingredientes;
     }
-    
+
     @Path("/pedido/insert")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -127,13 +142,13 @@ public class ApiService {
         int insertado = 0;
         try (DAOImplementation ui = new DAOImplementation();) {
             insertado = ui.insertaPedido(p);
-            System.out.println("IDPEDIDO:::::::::::: "+ insertado);
+            System.out.println("IDPEDIDO:::::::::::: " + insertado);
         } catch (Exception e) {
             e.printStackTrace();
         }
         return insertado;
     }
-    
+
     @Path("/productos_pedido/insert")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -141,7 +156,7 @@ public class ApiService {
         boolean insertado = false;
         try (DAOImplementation ui = new DAOImplementation();) {
             insertado = ui.insertaProductosPedido(pp);
-            System.out.println("PRODUCTOS_PEDIDO:::::::::::: "+ insertado);
+            System.out.println("PRODUCTOS_PEDIDO:::::::::::: " + insertado);
         } catch (Exception e) {
             e.printStackTrace();
         }

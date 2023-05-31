@@ -215,24 +215,8 @@ public class DAOImplementation implements DAOInterface, AutoCloseable {
     }
 
     @Override
-    public ArrayList<Pedido> getPedidos() throws Exception {
-        ArrayList<Pedido> pedidos = new ArrayList<>();
-        Pedido p;
-        String sql = "SELECT idPedido, idCliente, fechaPedido, finalizado from pedido;";
-        try (Statement stm = con.createStatement(); ResultSet rs = stm.executeQuery(sql);) {
-            while (rs.next()) {
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-                p = new Pedido(rs.getInt("idPedido"), rs.getInt("idCliente"), LocalDateTime.parse(rs.getString("fechaPedido"), formatter), rs.getInt("finalizado"));
-//                p = new Pedido(rs.getInt("idPedido"), rs.getInt("idCliente"), LocalDateTime.parse(rs.getString("fechaPedido")), rs.getInt("finalizado"));
-                pedidos.add(p);
-            }
-            return pedidos;
-        }
-    }
-
     public List<Object[]> getPedidoClienteInfo() throws SQLException {
         List<Object[]> results = new ArrayList<>();
-//        String sql = "SELECT p.idPedido, p.fechaPedido, c.nombre AS nombreCliente, c.direccionEnvio, c.telefono FROM pedido p INNER JOIN cliente c ON p.idCliente = c.idCliente";
         String sql = "SELECT p.idPedido, p.fechaPedido, c.nombre, c.direccionEnvio, c.telefono FROM pedido p INNER JOIN cliente c ON p.idCliente = c.idCliente;";
 
         try (
@@ -249,8 +233,6 @@ public class DAOImplementation implements DAOInterface, AutoCloseable {
                 results.add(row);
             }
         }
-
         return results;
     }
-
 }

@@ -11,16 +11,21 @@ import java.time.LocalDateTime;
  * @author dev
  */
 public class Pedido {
+
     private int id;
     private int idCliente;
     private LocalDateTime fechaPedido;
     private int finalizado;
+    private String comentario;
+    private String formaDePago;
 
-    public Pedido(int id, int idCliente, LocalDateTime fechaPedido, int finalizado) {
+    public Pedido(int id, int idCliente, LocalDateTime fechaPedido, int finalizado, String comentario, String formaDePago) {
         this.id = id;
         this.idCliente = idCliente;
         this.fechaPedido = fechaPedido;
         this.finalizado = finalizado;
+        this.comentario = comentario;
+        this.formaDePago = formaDePago;
     }
 
     public Pedido() {
@@ -30,12 +35,20 @@ public class Pedido {
         this.idCliente = idCliente;
     }
 
-    public int getIdCliente() {
-        return idCliente;
+    public String getComentario() {
+        return comentario;
     }
 
-    public void setIdCliente(int idCliente) {
-        this.idCliente = idCliente;
+    public void setComentario(String comentario) {
+        this.comentario = comentario;
+    }
+
+    public String getFormaDePago() {
+        return formaDePago;
+    }
+
+    public void setFormaDePago(String formaDePago) {
+        this.formaDePago = formaDePago;
     }
 
     public int getId() {
@@ -44,6 +57,14 @@ public class Pedido {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public int getIdCliente() {
+        return idCliente;
+    }
+
+    public void setIdCliente(int idCliente) {
+        this.idCliente = idCliente;
     }
 
     public LocalDateTime getFechaPedido() {
@@ -61,6 +82,4 @@ public class Pedido {
     public void setFinalizado(int finalizado) {
         this.finalizado = finalizado;
     }
-    
-    
 }
