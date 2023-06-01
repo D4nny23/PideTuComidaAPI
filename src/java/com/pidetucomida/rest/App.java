@@ -12,6 +12,6 @@ import jakarta.ws.rs.core.Application;
  * @author dev
  */
 @ApplicationPath("/resources")
-public class App extends Application{
-    
+public class App extends Application {
+
 }

@@ -9,6 +9,7 @@ package com.pidetucomida.pojo;
  * @author dev
  */
 public class Ingrediente {
+
     private int idIngrediente;
     private String nombre;
 
@@ -32,5 +33,4 @@ public class Ingrediente {
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
-    
 }

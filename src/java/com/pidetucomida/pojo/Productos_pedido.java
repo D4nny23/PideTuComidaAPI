@@ -9,6 +9,7 @@ package com.pidetucomida.pojo;
  * @author dev
  */
 public class Productos_pedido {
+
     private int id;
     private int idPedido;
     private int idProducto;
@@ -65,6 +66,4 @@ public class Productos_pedido {
     public void setCantidad(int cantidad) {
         this.cantidad = cantidad;
     }
-    
-    
 }

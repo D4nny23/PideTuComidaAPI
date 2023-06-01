@@ -4,8 +4,6 @@
  */
 package com.pidetucomida.pojo;
 
-import java.time.LocalDateTime;
-
 /**
  *
  * @author dev
@@ -14,12 +12,12 @@ public class Pedido {
 
     private int id;
     private int idCliente;
-    private LocalDateTime fechaPedido;
+    private String fechaPedido;
     private int finalizado;
     private String comentario;
     private String formaDePago;
 
-    public Pedido(int id, int idCliente, LocalDateTime fechaPedido, int finalizado, String comentario, String formaDePago) {
+    public Pedido(int id, int idCliente, String fechaPedido, int finalizado, String comentario, String formaDePago) {
         this.id = id;
         this.idCliente = idCliente;
         this.fechaPedido = fechaPedido;
@@ -35,19 +33,10 @@ public class Pedido {
         this.idCliente = idCliente;
     }
 
-    public String getComentario() {
-        return comentario;
-    }
-
-    public void setComentario(String comentario) {
+    public Pedido(int id, String fechaPedido, String comentario, String formaDePago) {
+        this.id = id;
+        this.fechaPedido = fechaPedido;
         this.comentario = comentario;
-    }
-
-    public String getFormaDePago() {
-        return formaDePago;
-    }
-
-    public void setFormaDePago(String formaDePago) {
         this.formaDePago = formaDePago;
     }
 
@@ -67,11 +56,11 @@ public class Pedido {
         this.idCliente = idCliente;
     }
 
-    public LocalDateTime getFechaPedido() {
+    public String getFechaPedido() {
         return fechaPedido;
     }
 
-    public void setFechaPedido(LocalDateTime fechaPedido) {
+    public void setFechaPedido(String fechaPedido) {
         this.fechaPedido = fechaPedido;
     }
 
@@ -81,5 +70,21 @@ public class Pedido {
 
     public void setFinalizado(int finalizado) {
         this.finalizado = finalizado;
+    }
+
+    public String getComentario() {
+        return comentario;
+    }
+
+    public void setComentario(String comentario) {
+        this.comentario = comentario;
+    }
+
+    public String getFormaDePago() {
+        return formaDePago;
+    }
+
+    public void setFormaDePago(String formaDePago) {
+        this.formaDePago = formaDePago;
     }
 }

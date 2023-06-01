@@ -9,6 +9,7 @@ package com.pidetucomida.pojo;
  * @author dev
  */
 public class Producto {
+
     private String ruta;
     private int idProducto;
     private String nombre;
@@ -16,9 +17,9 @@ public class Producto {
     private byte[] img;
     private double precio;
     private String tipo;
-    
-    public Producto(){
-        
+
+    public Producto() {
+
     }
 
     public Producto(int idProducto, String nombre, String descripcion, byte[] img, double precio, String tipo) {
@@ -29,7 +30,6 @@ public class Producto {
         this.precio = precio;
         this.tipo = tipo;
     }
-    
 
     public Producto(String ruta, int idProducto, String nombre, String descripcion, double precio, String tipo) {
         this.ruta = ruta;
@@ -37,20 +37,21 @@ public class Producto {
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.precio = precio;
-        this.tipo=tipo;
+        this.tipo = tipo;
     }
-    
+
     public Producto(int idProducto, String nombre, String descripcion, double precio) {
         this.idProducto = idProducto;
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.precio = precio;
     }
-    
+
     @Override
     public String toString() {
         return "Producto{" + "ruta=" + ruta + ", idProducto=" + idProducto + ", nombre=" + nombre + ", descripcion=" + descripcion + ", precio=" + precio + ", tipo=" + tipo + '}';
     }
+
     public double getPrecio() {
         return precio;
     }
@@ -106,5 +107,4 @@ public class Producto {
     public void setImg(byte[] img) {
         this.img = img;
     }
-    
 }

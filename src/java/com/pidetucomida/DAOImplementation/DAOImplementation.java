@@ -6,13 +6,8 @@ package com.pidetucomida.DAOImplementation;
 
 import com.pidetucomida.interfaces.DAOInterface;
 import com.pidetucomida.pojo.*;
-import java.io.File;
-import java.io.FileInputStream;
 import java.sql.*;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  *
@@ -117,20 +112,8 @@ public class DAOImplementation implements DAOInterface, AutoCloseable {
         String sql = "Insert into producto(img ,nombre, descripcion, precio, tipo) values(?,?,?,?,?)";
         try (PreparedStatement stm = con.prepareStatement(sql)) {
             insertado = p.toString();
-            File fichero = new File(p.getRuta());//digo que fichero es y directorio
-            byte[] buff = null;
-            if (fichero.exists()) {
-                FileInputStream ficheroIn = new FileInputStream(fichero);//con esto leeré el fichero para convertirlo en un array de bytes
-                long bytes = fichero.length();//cojo la longitud del fichero
-                buff = new byte[(int) bytes];//creo un array de bytes de la misma longitud
-                int i, j = 0;//declaro variables
-                System.out.println("Lo recorro y lo meto en un buffer");
-                while ((i = ficheroIn.read()) != -1) {//leo el fichero y lo guardo en un arrray de bytes
-                    buff[j] = (byte) i;
-                    j++;
-                }
-            }
-            Blob blob = new javax.sql.rowset.serial.SerialBlob(buff);
+
+            Blob blob = new javax.sql.rowset.serial.SerialBlob(p.getImg());
             stm.setBlob(1, blob);
             stm.setString(2, p.getNombre());
             stm.setString(3, p.getDescripcion());
@@ -145,7 +128,6 @@ public class DAOImplementation implements DAOInterface, AutoCloseable {
             insertado = e.getMessage();
         }
         return insertado;
-
     }
 
     @Override
@@ -215,24 +197,73 @@ public class DAOImplementation implements DAOInterface, AutoCloseable {
     }
 
     @Override
-    public List<Object[]> getPedidoClienteInfo() throws SQLException {
-        List<Object[]> results = new ArrayList<>();
-        String sql = "SELECT p.idPedido, p.fechaPedido, c.nombre, c.direccionEnvio, c.telefono FROM pedido p INNER JOIN cliente c ON p.idCliente = c.idCliente;";
-
-        try (
-                Statement stmt = con.createStatement();
-                ResultSet rs = stmt.executeQuery(sql)) {
-
+    public ArrayList<Pedido> getPedidos() throws Exception {
+        ArrayList<Pedido> pedidos = new ArrayList<>();
+        Pedido p = null;
+        String sql = "Select idPedido, fechaPedido, comentario, formaDePago from pedido;";
+        try (Statement stm = con.createStatement(); ResultSet rs = stm.executeQuery(sql);) {
             while (rs.next()) {
-                Object[] row = new Object[5];
-                row[0] = rs.getInt("idPedido");
-                row[1] = rs.getTimestamp("fechaPedido");
-                row[2] = rs.getString("nombre");
-                row[3] = rs.getString("direccionEnvio");
-                row[4] = rs.getString("telefono");
-                results.add(row);
+                p = new Pedido(rs.getInt("idPedido"), rs.getString("fechaPedido"), rs.getString("comentario"), rs.getString("formaDePago"));
+                pedidos.add(p);
             }
+        } catch (Exception e) {
         }
-        return results;
+        return pedidos;
+    }
+
+    @Override
+    public boolean finalizarPedido(int idPedido) throws Exception {
+        boolean actualizado = false;
+        String sql = "UPDATE pedido SET finalizado = 1 WHERE idPedido = ?";
+        try (PreparedStatement stm = con.prepareStatement(sql)) {
+            stm.setInt(1, idPedido);
+            int filasActualizadas = stm.executeUpdate();
+            if (filasActualizadas > 0) {
+                actualizado = true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return actualizado;
+    }
+
+    @Override
+    public Cliente devuelveClientePorIdPedido(int idPedido) throws Exception {
+        Cliente c = null;
+        String sql = "SELECT c.idCliente, c.nombre AS nombre_cliente, c.correo, c.direccionEnvio, c.telefono "
+                + "FROM cliente c JOIN pedido p ON c.idCliente = p.idCliente WHERE p.idPedido = ?;";
+        try (PreparedStatement stm = con.prepareStatement(sql)) {
+            stm.setInt(1, idPedido);
+            try (ResultSet rs = stm.executeQuery()) {
+                if (rs.next()) {
+                    c = new Cliente(rs.getInt("idCliente"), rs.getString("nombre_cliente"), rs.getString("correo"),
+                            rs.getString("direccionEnvio"), rs.getString("telefono"));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return c;
+    }
+
+    @Override
+    public ArrayList<Producto> getProductosPorIdPedido(int idPedido) throws Exception {
+        ArrayList<Producto> productos = new ArrayList<>();
+        Producto p = null;
+        String sql = "SELECT pr.nombre AS nombre_producto FROM producto pr JOIN producto_pedido pp ON pr.idProducto = pp.idProducto WHERE pp.idPedido = ?;";
+        try (PreparedStatement stm = con.prepareStatement(sql)) {
+            stm.setInt(1, idPedido);
+            try (ResultSet rs = stm.executeQuery()) {
+                while (rs.next()) {
+                    String nombreProducto = rs.getString("nombre_producto");
+                    p = new Producto();
+                    p.setNombre(nombreProducto);
+                    productos.add(p);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return productos;
     }
 }

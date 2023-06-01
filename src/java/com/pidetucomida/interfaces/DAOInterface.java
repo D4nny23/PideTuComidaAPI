@@ -6,7 +6,6 @@ package com.pidetucomida.interfaces;
 
 import com.pidetucomida.pojo.*;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  *
@@ -20,7 +19,11 @@ public interface DAOInterface {
 
     public Cliente devuelveCliente(String correo) throws Exception;
 
+    public Cliente devuelveClientePorIdPedido(int idPedido) throws Exception;
+
     public ArrayList<Producto> getProductosPorTipo(String tipo) throws Exception;
+
+    public ArrayList<Producto> getProductosPorIdPedido(int idPedido) throws Exception;
 
     public String insertaProducto(Producto p) throws Exception;
 
@@ -32,5 +35,7 @@ public interface DAOInterface {
 
     public boolean insertaProductosPedido(Productos_pedido pp) throws Exception;
 
-    public List<Object[]> getPedidoClienteInfo() throws Exception;
+    public ArrayList<Pedido> getPedidos() throws Exception;
+
+    public boolean finalizarPedido(int idPedido) throws Exception;
 }

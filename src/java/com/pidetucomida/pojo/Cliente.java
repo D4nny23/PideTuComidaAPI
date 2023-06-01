@@ -9,13 +9,22 @@ package com.pidetucomida.pojo;
  * @author dev
  */
 public class Cliente {
-   private int idCliente;
-   private String correo;
-   private String pass;
-   private String nombre;
-   private String apellido;
-   private String direccionEnvio;
-   private String telefono;
+
+    private int idCliente;
+    private String correo;
+    private String pass;
+    private String nombre;
+    private String apellido;
+    private String direccionEnvio;
+    private String telefono;
+
+    public Cliente(int idCliente, String nombre, String correo, String direccionEnvio, String telefono) {
+        this.idCliente = idCliente;
+        this.nombre = nombre;
+        this.correo = correo;
+        this.direccionEnvio = direccionEnvio;
+        this.telefono = telefono;
+    }
 
     @Override
     public String toString() {
@@ -90,7 +99,4 @@ public class Cliente {
     public void setDireccionEnvio(String direccionEnvio) {
         this.direccionEnvio = direccionEnvio;
     }
-   
-   
-   
 }

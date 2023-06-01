@@ -8,6 +8,7 @@ import com.pidetucomida.DAOImplementation.DAOImplementation;
 import com.pidetucomida.pojo.*;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,15 +36,31 @@ public class ApiService {
     @Path("/pedidos")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Object[]> getPedido() {
-        List<Object[]> pedidos = null;
+    public ArrayList<Pedido> getPedido() {
+        ArrayList<Pedido> pedidos = null;
         Pedido p = null;
         try (DAOImplementation imp = new DAOImplementation()) {
-            pedidos = imp.getPedidoClienteInfo();
+            pedidos = imp.getPedidos();
         } catch (Exception e) {
             e.printStackTrace();
         }
         return pedidos;
+    }
+
+    @Path("/pedidos/finalizarPedido/{idPedido}")
+    @POST
+    public Response finalizarPedido(@PathParam("idPedido") int idPedido) {
+        try (DAOImplementation imp = new DAOImplementation()) {
+            boolean finalizado = imp.finalizarPedido(idPedido);
+            if (finalizado) {
+                return Response.ok().build();
+            } else {
+                return Response.status(Response.Status.NOT_FOUND).build();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @Path("/insert")
@@ -59,9 +76,6 @@ public class ApiService {
         return insertado;
     }
 
-    ;
-    
-    
     @Path("/cliente/{correo}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -105,8 +119,6 @@ public class ApiService {
         return insertado;
     }
 
-    ;
-    
     @Path("/productos/id/{id}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -161,5 +173,31 @@ public class ApiService {
             e.printStackTrace();
         }
         return insertado;
+    }
+
+    @Path("/pedidos/detalles_pedido/{idPedido}")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Cliente getDetallesPedido(@PathParam("idPedido") int idPedido) {
+        Cliente cliente = null;
+        try (DAOImplementation imp = new DAOImplementation()) {
+            cliente = imp.devuelveClientePorIdPedido(idPedido);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return cliente;
+    }
+
+    @Path("/pedidos/detalles_pedido/{idPedido}/productos")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public ArrayList<Producto> getProductosPorIdPedido(@PathParam("idPedido") int idPedido) {
+        ArrayList<Producto> productos = new ArrayList<>();
+        try (DAOImplementation imp = new DAOImplementation()) {
+            productos = imp.getProductosPorIdPedido(idPedido);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return productos;
     }
 }
