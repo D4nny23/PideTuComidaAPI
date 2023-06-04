@@ -168,7 +168,7 @@ public class ApiService {
         boolean insertado = false;
         try (DAOImplementation ui = new DAOImplementation();) {
             insertado = ui.insertaProductosPedido(pp);
-            System.out.println("PRODUCTOS_PEDIDO:::::::::::: " + insertado);
+            System.out.println("PRODUCTOS_PEDIDO:::::::::::: " + pp.toString());
         } catch (Exception e) {
             e.printStackTrace();
         }

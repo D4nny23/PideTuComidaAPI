@@ -163,11 +163,12 @@ public class DAOImplementation implements DAOInterface, AutoCloseable {
     @Override
     public int insertaPedido(Pedido p) throws Exception {
         int idPedido = 0;
-        String sql = "INSERT INTO pedido(idCliente, comentario, formaDePago) VALUES(?,?,?);";
+        String sql = "INSERT INTO pedido(idCliente, comentario, formaDePago, precioTotal) VALUES(?,?,?,?);";
         try (PreparedStatement stm = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stm.setInt(1, p.getIdCliente());
             stm.setString(2, p.getComentario());
             stm.setString(3, p.getFormaDePago());
+            stm.setDouble(4, p.getPrecioTotal());
             stm.executeUpdate();
 
             try (ResultSet rs = stm.getGeneratedKeys()) {
@@ -184,12 +185,11 @@ public class DAOImplementation implements DAOInterface, AutoCloseable {
     @Override
     public boolean insertaProductosPedido(Productos_pedido pp) throws Exception {
         boolean insertado = false;
-        String sql = "Insert into producto_pedido(idPedido, idProducto, cantidad, precio) values(?,?,?,?)";
+        String sql = "Insert into producto_pedido(idPedido, idProducto, cantidad) values(?,?,?)";
         try (PreparedStatement stm = con.prepareStatement(sql)) {
             stm.setInt(1, pp.getIdPedido());
             stm.setInt(2, pp.getIdProducto());
             stm.setInt(3, pp.getCantidad());
-            stm.setDouble(4, pp.getPrecio());
             stm.executeUpdate();
             insertado = true;
         } catch (Exception e) {

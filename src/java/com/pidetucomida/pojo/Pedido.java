@@ -16,6 +16,7 @@ public class Pedido {
     private int finalizado;
     private String comentario;
     private String formaDePago;
+    private double precioTotal;
 
     public Pedido(int id, int idCliente, String fechaPedido, int finalizado, String comentario, String formaDePago) {
         this.id = id;
@@ -32,7 +33,7 @@ public class Pedido {
     public Pedido(int idCliente) {
         this.idCliente = idCliente;
     }
-
+    
     public Pedido(int id, String fechaPedido, String comentario, String formaDePago) {
         this.id = id;
         this.fechaPedido = fechaPedido;
@@ -86,5 +87,13 @@ public class Pedido {
 
     public void setFormaDePago(String formaDePago) {
         this.formaDePago = formaDePago;
+    }
+
+    public double getPrecioTotal() {
+        return precioTotal;
+    }
+
+    public void setPrecioTotal(double precioTotal) {
+        this.precioTotal = precioTotal;
     }
 }

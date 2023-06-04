@@ -14,7 +14,6 @@ public class Productos_pedido {
     private int idPedido;
     private int idProducto;
     private int cantidad;
-    private double precio;
 
     public Productos_pedido() {
     }
@@ -24,15 +23,6 @@ public class Productos_pedido {
         this.idPedido = idPedido;
         this.idProducto = idProducto;
         this.cantidad = cantidad;
-        this.precio = precio;
-    }
-
-    public double getPrecio() {
-        return precio;
-    }
-
-    public void setPrecio(double precio) {
-        this.precio = precio;
     }
 
     public int getId() {
@@ -66,4 +56,11 @@ public class Productos_pedido {
     public void setCantidad(int cantidad) {
         this.cantidad = cantidad;
     }
+
+    @Override
+    public String toString() {
+        return "Productos_pedido{" + "id=" + id + ", idPedido=" + idPedido + ", idProducto=" + idProducto + ", cantidad=" + cantidad + '}';
+    }
+    
+    
 }
