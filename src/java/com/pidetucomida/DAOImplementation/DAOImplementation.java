@@ -163,9 +163,11 @@ public class DAOImplementation implements DAOInterface, AutoCloseable {
     @Override
     public int insertaPedido(Pedido p) throws Exception {
         int idPedido = 0;
-        String sql = "INSERT INTO pedido(idCliente) VALUES(?)";
+        String sql = "INSERT INTO pedido(idCliente, comentario, formaDePago) VALUES(?,?,?);";
         try (PreparedStatement stm = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stm.setInt(1, p.getIdCliente());
+            stm.setString(2, p.getComentario());
+            stm.setString(3, p.getFormaDePago());
             stm.executeUpdate();
 
             try (ResultSet rs = stm.getGeneratedKeys()) {
