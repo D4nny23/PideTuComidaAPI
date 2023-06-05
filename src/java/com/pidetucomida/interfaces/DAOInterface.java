@@ -25,7 +25,7 @@ public interface DAOInterface {
 
     public ArrayList<Producto> getProductosPorIdPedido(int idPedido) throws Exception;
 
-    public String insertaProducto(Producto p) throws Exception;
+    public int insertaProducto(Producto p) throws Exception;
 
     public Producto getProductoPorId(int id) throws Exception;
 
@@ -39,11 +39,12 @@ public interface DAOInterface {
 
     public boolean finalizarPedido(int idPedido) throws Exception;
 
-//    public String insertaIngrediente(Ingrediente i) throws Exception;
-//    public boolean insertaIngrediente(Ingrediente i) throws Exception;
-    public boolean insertaIngredientes(ArrayList<Ingrediente> ingredientes) throws Exception;
+//    public String insertaIngredientes(ArrayList<Ingrediente> ingredientes) throws Exception;
+    public ArrayList<Integer> insertaIngredientes(ArrayList<Ingrediente> ingredientes) throws Exception;
 
     public boolean existeIngrediente(String nombre) throws Exception;
 
-    public boolean verificarIngrediente(Ingrediente ingrediente) throws Exception;
+    public ArrayList<Productos_pedido> getCantidadDeProductosPorPedido(int idPedido) throws Exception;
+    
+    public String insertaIngredienteAProducto(int idProducto) throws Exception;
 }

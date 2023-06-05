@@ -107,11 +107,10 @@ public class DAOImplementation implements DAOInterface, AutoCloseable {
     }
 
     @Override
-    public String insertaProducto(Producto p) throws Exception {
-        String insertado = "No insertado";
+    public int insertaProducto(Producto p) throws Exception {
+        int idProducto = 0;
         String sql = "Insert into producto(img ,nombre, descripcion, precio, tipo) values(?,?,?,?,?)";
-        try (PreparedStatement stm = con.prepareStatement(sql)) {
-            insertado = p.toString();
+        try (PreparedStatement stm = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             Blob blob = new javax.sql.rowset.serial.SerialBlob(p.getImg());
             stm.setBlob(1, blob);
@@ -119,23 +118,18 @@ public class DAOImplementation implements DAOInterface, AutoCloseable {
             stm.setString(3, p.getDescripcion());
             stm.setDouble(4, p.getPrecio());
             stm.setString(5, p.getTipo());
-//            stm.executeUpdate();
-//            System.out.println(p.toString());
-//            insertado = "Insertado";
+            stm.executeUpdate();
+            System.out.println("PRODUCTO INSERTADO --> " + p.toString());
 
-            int i = stm.executeUpdate();
-            if (i > 0) {
-                System.out.println("PRODUCTO INSERTADO --> " + p.toString());
-                insertado = "" + p.getIdProducto();
-                System.out.println("ID -> " + insertado);
-            } else {
-                System.out.println("Producto no insertado");
+            try (ResultSet rs = stm.getGeneratedKeys()) {
+                if (rs.next()) {
+                    idProducto = rs.getInt(1);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
-            insertado = e.getMessage();
         }
-        return insertado;
+        return idProducto;
     }
 
     @Override
@@ -211,10 +205,10 @@ public class DAOImplementation implements DAOInterface, AutoCloseable {
     public ArrayList<Pedido> getPedidos() throws Exception {
         ArrayList<Pedido> pedidos = new ArrayList<>();
         Pedido p = null;
-        String sql = "Select idPedido, fechaPedido, comentario, formaDePago from pedido;";
+        String sql = "Select idPedido, fechaPedido, comentario, formaDePago, precioTotal from pedido;";
         try (Statement stm = con.createStatement(); ResultSet rs = stm.executeQuery(sql);) {
             while (rs.next()) {
-                p = new Pedido(rs.getInt("idPedido"), rs.getString("fechaPedido"), rs.getString("comentario"), rs.getString("formaDePago"));
+                p = new Pedido(rs.getInt("idPedido"), rs.getString("fechaPedido"), rs.getString("comentario"), rs.getString("formaDePago"), rs.getDouble("precioTotal"));
                 pedidos.add(p);
             }
         } catch (Exception e) {
@@ -279,52 +273,78 @@ public class DAOImplementation implements DAOInterface, AutoCloseable {
     }
 
 //    @Override
-//    public String insertaIngrediente(Ingrediente i) throws Exception {
-//        String insertado = "Ingrediente no insertado";
+//    public String insertaIngredientes(ArrayList<Ingrediente> al) throws Exception {
+//        String insertado = "Ya existe algún ingrediente. Se insertaron los demás ";
 //        String sql = "INSERT INTO ingrediente (nombre) VALUES (?);";
 //        try (PreparedStatement stm = con.prepareStatement(sql)) {
-//            stm.setString(1, i.getNombre());
-//            stm.executeUpdate();
-//            insertado = "Ingrediente insertado";
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return insertado;
-//    }
-//    @Override
-//    public boolean insertaIngrediente(Ingrediente i) throws Exception {
-//        boolean insertado = false;
-//        String sql = "INSERT INTO ingrediente (nombre) VALUES (?);";
-//        try (PreparedStatement stm = con.prepareStatement(sql)) {
-//            stm.setString(1, i.getNombre());
-//            int filasAfectadas = stm.executeUpdate();
-//            if (filasAfectadas > 0) {
-//                insertado = true;
+//            for (Ingrediente i : al) {
+//                // Para verificar si el ingrediente ya existe en la base de datos
+//                if (!existeIngrediente(i.getNombre())) {
+//                    stm.setString(1, i.getNombre());
+//                    int filasAfectadas = stm.executeUpdate();
+//                    if (filasAfectadas > 0) {
+//                        insertado = "Ingredientes insertados";
+//                    }
+//                }
 //            }
 //        } catch (Exception e) {
 //            e.printStackTrace();
 //        }
 //        return insertado;
 //    }
+//    @Override
+//    public ArrayList<Integer> insertaIngredientes(ArrayList<Ingrediente> al) throws Exception {
+//        ArrayList<Integer> idIngredientes = new ArrayList<>();
+//        int id;
+//        String sql = "INSERT INTO ingrediente (nombre) VALUES (?);";
+//        try (PreparedStatement stm = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+//            for (Ingrediente i : al) {
+//                // Para verificar si el ingrediente ya existe en la base de datos
+//                if (!existeIngrediente(i.getNombre())) {
+//                    stm.setString(1, i.getNombre());
+//                    stm.executeUpdate();
+//                }
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return idIngredientes;
+//    }
     @Override
-    public boolean insertaIngredientes(ArrayList<Ingrediente> al) throws Exception {
-        boolean insertado = false;
-        String sql = "INSERT INTO ingrediente (nombre) VALUES (?);";
-        try (PreparedStatement stm = con.prepareStatement(sql)) {
+    public ArrayList<Integer> insertaIngredientes(ArrayList<Ingrediente> al) throws Exception {
+        ArrayList<Integer> idIngredientes = new ArrayList<>();
+        String sqlInsert = "INSERT INTO ingrediente (nombre) VALUES (?);";
+        String sqlSelect = "SELECT idIngrediente FROM ingrediente WHERE nombre = ?;";
+
+        try (PreparedStatement stmInsert = con.prepareStatement(sqlInsert, Statement.RETURN_GENERATED_KEYS);
+                PreparedStatement stmSelect = con.prepareStatement(sqlSelect)) {
+
             for (Ingrediente i : al) {
-                // Para verificar si el ingrediente ya existe en la base de datos
                 if (!existeIngrediente(i.getNombre())) {
-                    stm.setString(1, i.getNombre());
-                    int filasAfectadas = stm.executeUpdate();
-                    if (filasAfectadas > 0) {
-                        insertado = true;
+                    stmInsert.setString(1, i.getNombre());
+                    stmInsert.executeUpdate();
+
+                    try (ResultSet rs = stmInsert.getGeneratedKeys()) {
+                        if (rs.next()) {
+                            int id = rs.getInt(1);
+                            idIngredientes.add(id);
+                        }
+                    }
+                } else {
+                    stmSelect.setString(1, i.getNombre());
+                    try (ResultSet rs = stmSelect.executeQuery()) {
+                        if (rs.next()) {
+                            int id = rs.getInt(1);
+                            idIngredientes.add(id);
+                        }
                     }
                 }
             }
+            System.out.println("ID    ->" + idIngredientes);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return insertado;
+        return idIngredientes;
     }
 
     @Override
@@ -345,20 +365,30 @@ public class DAOImplementation implements DAOInterface, AutoCloseable {
     }
 
     @Override
-    public boolean verificarIngrediente(Ingrediente ingrediente) throws Exception {
-        boolean existe = false;
-        String sql = "SELECT COUNT(*) FROM ingrediente WHERE nombre = ?"; // Count. Si retorna mayor que 0 es porque el ingrediente existe
+    public ArrayList<Productos_pedido> getCantidadDeProductosPorPedido(int idPedido) throws Exception {
+        ArrayList<Productos_pedido> cantidades = new ArrayList<>();
+        Productos_pedido pp = null;
+        String sql = "Select cantidad from producto_pedido where idPedido = ?;";
         try (PreparedStatement stm = con.prepareStatement(sql)) {
-            stm.setString(1, ingrediente.getNombre());
+            stm.setInt(1, idPedido);
             try (ResultSet rs = stm.executeQuery()) {
-                if (rs.next()) {
-                    int nIngredientes = rs.getInt(1);
-                    existe = nIngredientes > 0;
+                while (rs.next()) {
+                    int cantidad = rs.getInt("cantidad");
+                    pp = new Productos_pedido();
+                    pp.setCantidad(cantidad);
+                    cantidades.add(pp);
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return existe;
+        return cantidades;
+    }
+
+    @Override
+    public String insertaIngredienteAProducto(int idProducto) throws Exception {
+        
+        return null;
+        
     }
 }
