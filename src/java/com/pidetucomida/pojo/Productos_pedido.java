@@ -61,6 +61,4 @@ public class Productos_pedido {
     public String toString() {
         return "Productos_pedido{" + "id=" + id + ", idPedido=" + idPedido + ", idProducto=" + idProducto + ", cantidad=" + cantidad + '}';
     }
-    
-    
 }

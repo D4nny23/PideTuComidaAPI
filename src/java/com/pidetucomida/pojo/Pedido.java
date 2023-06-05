@@ -33,7 +33,7 @@ public class Pedido {
     public Pedido(int idCliente) {
         this.idCliente = idCliente;
     }
-    
+
     public Pedido(int id, String fechaPedido, String comentario, String formaDePago) {
         this.id = id;
         this.fechaPedido = fechaPedido;
