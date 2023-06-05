@@ -37,14 +37,13 @@ public interface DAOInterface {
 
     public ArrayList<Pedido> getPedidos() throws Exception;
 
-    public boolean finalizarPedido(int idPedido) throws Exception;
+    public String finalizarPedido(int idPedido) throws Exception;
 
-//    public String insertaIngredientes(ArrayList<Ingrediente> ingredientes) throws Exception;
     public ArrayList<Integer> insertaIngredientes(ArrayList<Ingrediente> ingredientes) throws Exception;
 
     public boolean existeIngrediente(String nombre) throws Exception;
 
     public ArrayList<Productos_pedido> getCantidadDeProductosPorPedido(int idPedido) throws Exception;
-    
-    public String insertaIngredienteAProducto(int idProducto) throws Exception;
+
+    public String insertaIngredienteAProducto(IngredienteProducto ip) throws Exception;
 }

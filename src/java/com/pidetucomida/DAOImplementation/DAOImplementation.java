@@ -205,7 +205,7 @@ public class DAOImplementation implements DAOInterface, AutoCloseable {
     public ArrayList<Pedido> getPedidos() throws Exception {
         ArrayList<Pedido> pedidos = new ArrayList<>();
         Pedido p = null;
-        String sql = "Select idPedido, fechaPedido, comentario, formaDePago, precioTotal from pedido;";
+        String sql = "Select idPedido, fechaPedido, comentario, formaDePago, precioTotal from pedido where finalizado = 0;";
         try (Statement stm = con.createStatement(); ResultSet rs = stm.executeQuery(sql);) {
             while (rs.next()) {
                 p = new Pedido(rs.getInt("idPedido"), rs.getString("fechaPedido"), rs.getString("comentario"), rs.getString("formaDePago"), rs.getDouble("precioTotal"));
@@ -214,22 +214,6 @@ public class DAOImplementation implements DAOInterface, AutoCloseable {
         } catch (Exception e) {
         }
         return pedidos;
-    }
-
-    @Override
-    public boolean finalizarPedido(int idPedido) throws Exception {
-        boolean actualizado = false;
-        String sql = "UPDATE pedido SET finalizado = 1 WHERE idPedido = ?";
-        try (PreparedStatement stm = con.prepareStatement(sql)) {
-            stm.setInt(1, idPedido);
-            int filasActualizadas = stm.executeUpdate();
-            if (filasActualizadas > 0) {
-                actualizado = true;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return actualizado;
     }
 
     @Override
@@ -272,44 +256,6 @@ public class DAOImplementation implements DAOInterface, AutoCloseable {
         return productos;
     }
 
-//    @Override
-//    public String insertaIngredientes(ArrayList<Ingrediente> al) throws Exception {
-//        String insertado = "Ya existe algún ingrediente. Se insertaron los demás ";
-//        String sql = "INSERT INTO ingrediente (nombre) VALUES (?);";
-//        try (PreparedStatement stm = con.prepareStatement(sql)) {
-//            for (Ingrediente i : al) {
-//                // Para verificar si el ingrediente ya existe en la base de datos
-//                if (!existeIngrediente(i.getNombre())) {
-//                    stm.setString(1, i.getNombre());
-//                    int filasAfectadas = stm.executeUpdate();
-//                    if (filasAfectadas > 0) {
-//                        insertado = "Ingredientes insertados";
-//                    }
-//                }
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return insertado;
-//    }
-//    @Override
-//    public ArrayList<Integer> insertaIngredientes(ArrayList<Ingrediente> al) throws Exception {
-//        ArrayList<Integer> idIngredientes = new ArrayList<>();
-//        int id;
-//        String sql = "INSERT INTO ingrediente (nombre) VALUES (?);";
-//        try (PreparedStatement stm = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-//            for (Ingrediente i : al) {
-//                // Para verificar si el ingrediente ya existe en la base de datos
-//                if (!existeIngrediente(i.getNombre())) {
-//                    stm.setString(1, i.getNombre());
-//                    stm.executeUpdate();
-//                }
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return idIngredientes;
-//    }
     @Override
     public ArrayList<Integer> insertaIngredientes(ArrayList<Ingrediente> al) throws Exception {
         ArrayList<Integer> idIngredientes = new ArrayList<>();
@@ -386,9 +332,37 @@ public class DAOImplementation implements DAOInterface, AutoCloseable {
     }
 
     @Override
-    public String insertaIngredienteAProducto(int idProducto) throws Exception {
-        
-        return null;
-        
+    public String insertaIngredienteAProducto(IngredienteProducto ip) throws Exception {
+
+        String insertado = "Ingredientes no añadidos al producto " + ip.getIdProducto();
+        String sql = "Insert into ingrediente_producto values(?,?)";
+        try (PreparedStatement stm = con.prepareStatement(sql)) {
+            for (int i = 0; i < ip.getAl().size(); i++) {
+                stm.setInt(1, ip.getIdProducto());
+                stm.setInt(2, ip.getAl().get(i));
+                stm.executeUpdate();
+            }
+            insertado = "Ingredientes añadidos al producto " + ip.getIdProducto();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return insertado;
+
+    }
+
+    @Override
+    public String finalizarPedido(int idPedido) throws Exception {
+        String borrado = "Pedido no borrado";
+        String sql = "UPDATE pedido SET finalizado = 1 WHERE idPedido = ?";
+        try (PreparedStatement stm = con.prepareStatement(sql)) {
+            stm.setInt(1, idPedido);
+            int filasActualizadas = stm.executeUpdate();
+            if (filasActualizadas > 0) {
+                borrado = "Pedido borrado correctamente";
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return borrado;
     }
 }

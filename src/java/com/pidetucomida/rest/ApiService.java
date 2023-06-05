@@ -46,22 +46,6 @@ public class ApiService {
         return pedidos;
     }
 
-    @Path("/pedidos/finalizarPedido/{idPedido}")
-    @POST
-    public Response finalizarPedido(@PathParam("idPedido") int idPedido) {
-        try (DAOImplementation imp = new DAOImplementation()) {
-            boolean finalizado = imp.finalizarPedido(idPedido);
-            if (finalizado) {
-                return Response.ok().build();
-            } else {
-                return Response.status(Response.Status.NOT_FOUND).build();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
-        }
-    }
-
     @Path("/insert")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -200,18 +184,6 @@ public class ApiService {
         return productos;
     }
 
-//    @Path("/ingredientesInsert")
-//    @POST
-//    @Consumes(MediaType.APPLICATION_JSON)
-//    public String setIngrediente(ArrayList<Ingrediente> i) {
-//        String insertado = "";
-//        try (DAOImplementation ui = new DAOImplementation();) {
-//            insertado = ui.insertaIngredientes(i);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return insertado;
-//    }
     @Path("/ingredientesInsert")
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -225,18 +197,19 @@ public class ApiService {
         return insertado;
     }
 
-//    @Path("/ingredientesInsert/{idProducto}")
-//    @POST
-//    @Consumes(MediaType.APPLICATION_JSON)
-//    public String insertaIngredienteAProducto(@PathParam("idProducto") int idProducto) {
-//        String insertado = "";
-//        try (DAOImplementation ui = new DAOImplementation();) {
-//            insertado = ui.insertaIngredienteAProducto(idProducto);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return insertado;
-//    }
+    @Path("/ingredientesInsertEnProducto")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    public String insertaIngredienteAProducto(IngredienteProducto ip) {
+        String insertado = "";
+        try (DAOImplementation ui = new DAOImplementation();) {
+            insertado = ui.insertaIngredienteAProducto(ip);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return insertado;
+    }
+
     @Path("/pedidos/detalles_pedido/{idPedido}/productos/cantidad")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -248,5 +221,17 @@ public class ApiService {
             e.printStackTrace();
         }
         return cantidades;
+    }
+
+    @Path("/pedidos/finalizarPedido/{idPedido}")
+    @POST
+    public String finalizarPedido(@PathParam("idPedido") int idPedido) {
+        String borrado = "";
+        try (DAOImplementation imp = new DAOImplementation()) {
+            borrado = imp.finalizarPedido(idPedido);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return borrado;
     }
 }
