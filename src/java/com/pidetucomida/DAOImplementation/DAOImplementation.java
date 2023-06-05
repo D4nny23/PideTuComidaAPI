@@ -314,23 +314,59 @@ public class DAOImplementation implements DAOInterface, AutoCloseable {
     public ArrayList<Productos_pedido> getCantidadDeProductosPorPedido(int idPedido) throws Exception {
         ArrayList<Productos_pedido> cantidades = new ArrayList<>();
         Productos_pedido pp = null;
-        String sql = "Select cantidad from producto_pedido where idPedido = ?;";
-        try (PreparedStatement stm = con.prepareStatement(sql)) {
+        String sql = "SELECT cantidad, idProducto FROM producto_pedido WHERE idPedido = ?;";
+        try (PreparedStatement stm = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stm.setInt(1, idPedido);
             try (ResultSet rs = stm.executeQuery()) {
                 while (rs.next()) {
                     int cantidad = rs.getInt("cantidad");
+                    int idProducto = rs.getInt("idProducto");
                     pp = new Productos_pedido();
                     pp.setCantidad(cantidad);
+                    pp.setIdProducto(idProducto);
+                    cantidades.add(pp);
+                    System.out.println("CANTIDAD: " + cantidades);
+                }
+            }
+
+            try (ResultSet generatedKeys = stm.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    int primaryKey = generatedKeys.getInt(1);
+                    pp.setIdProducto(primaryKey);
                     cantidades.add(pp);
                 }
             }
+
+            System.out.println("Cantidades -> " + cantidades);
         } catch (Exception e) {
             e.printStackTrace();
         }
         return cantidades;
     }
 
+//    @Override
+//    public ArrayList<Integer> getCantidadDeProductosPorPedido(int idPedido) throws Exception {
+//        ArrayList<Integer> cantidades = new ArrayList<>();
+////        Productos_pedido pp = null;
+//        String sql = "Select cantidad from producto_pedido where idPedido = ?;";
+//        try (PreparedStatement stm = con.prepareStatement(sql)) {
+//            stm.setInt(1, idPedido);
+//            try (ResultSet rs = stm.executeQuery()) {
+//                while (rs.next()) {
+//                    int cantidad = rs.getInt(1);
+////                    pp = new Productos_pedido();
+////                    pp.setCantidad(cantidad);
+//                    cantidades.add(cantidad);
+////                    System.out.println("CANTIDAD: " + pp.getIdProducto() + pp.getCantidad());
+//                    System.out.println("CANTIDAD:   " + cantidades);
+//                }
+//            }
+//            System.out.println("CAntidades -> " + cantidades);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return cantidades;
+//    }
     @Override
     public String insertaIngredienteAProducto(IngredienteProducto ip) throws Exception {
 

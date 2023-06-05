@@ -222,6 +222,18 @@ public class ApiService {
         }
         return cantidades;
     }
+//    @Path("/pedidos/detalles_pedido/{idPedido}/productos/cantidad")
+//    @GET
+//    @Produces(MediaType.APPLICATION_JSON)
+//    public ArrayList<Integer> getCantidadDeProductosPorPedido(@PathParam("idPedido") int idPedido) {
+//        ArrayList<Integer> cantidades = new ArrayList<>();
+//        try (DAOImplementation imp = new DAOImplementation()) {
+//            cantidades = imp.getCantidadDeProductosPorPedido(idPedido);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return cantidades;
+//    }
 
     @Path("/pedidos/finalizarPedido/{idPedido}")
     @POST
