@@ -10,7 +10,6 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  *
@@ -110,7 +109,7 @@ public class ApiService {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public String setProducto(Producto p) {
-        String insertado = "No insertado";
+        String insertado = "Producto no insertado";
         try (DAOImplementation ui = new DAOImplementation();) {
             insertado = ui.insertaProducto(p);
         } catch (Exception e) {
@@ -199,5 +198,55 @@ public class ApiService {
             e.printStackTrace();
         }
         return productos;
+    }
+
+//    @Path("/ingredientesInsert")
+//    @POST
+//    @Consumes(MediaType.APPLICATION_JSON)
+//    @Produces(MediaType.APPLICATION_JSON)
+//    public String setIngrediente(Ingrediente i) {
+//        String insertado = "Ingrediente no insertado";
+//        try (DAOImplementation ui = new DAOImplementation();) {
+//            insertado = ui.insertaIngrediente(i);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return insertado;
+//    }
+//    @Path("/ingredientesInsert")
+//    @POST
+//    @Consumes(MediaType.APPLICATION_JSON)
+//    public boolean setIngrediente(Ingrediente i) {
+//        boolean insertado = false;
+//        try (DAOImplementation ui = new DAOImplementation();) {
+//            insertado = ui.insertaIngrediente(i);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return insertado;
+//    }
+    @Path("/ingredientesInsert")
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    public boolean setIngrediente(ArrayList<Ingrediente> i) {
+        boolean insertado = false;
+        try (DAOImplementation ui = new DAOImplementation();) {
+            insertado = ui.insertaIngredientes(i);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return insertado;
+    }
+
+    @Path("/ingredientesVerificar/{nombre}")
+    @GET
+    @Consumes(MediaType.APPLICATION_JSON)
+    public boolean verificarIngrediente(Ingrediente ingrediente) {
+        try (DAOImplementation imp = new DAOImplementation()) {
+            return imp.verificarIngrediente(ingrediente);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }

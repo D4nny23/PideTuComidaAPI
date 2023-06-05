@@ -119,10 +119,18 @@ public class DAOImplementation implements DAOInterface, AutoCloseable {
             stm.setString(3, p.getDescripcion());
             stm.setDouble(4, p.getPrecio());
             stm.setString(5, p.getTipo());
-            stm.executeUpdate();
-            System.out.println(p.toString());
-            insertado = "Insertado";
+//            stm.executeUpdate();
+//            System.out.println(p.toString());
+//            insertado = "Insertado";
 
+            int i = stm.executeUpdate();
+            if (i > 0) {
+                System.out.println("PRODUCTO INSERTADO --> " + p.toString());
+                insertado = "" + p.getIdProducto();
+                System.out.println("ID -> " + insertado);
+            } else {
+                System.out.println("Producto no insertado");
+            }
         } catch (Exception e) {
             e.printStackTrace();
             insertado = e.getMessage();
@@ -141,6 +149,7 @@ public class DAOImplementation implements DAOInterface, AutoCloseable {
                 p = new Producto(rs.getInt(1), rs.getString(2), rs.getString(3), bytes, rs.getDouble(5), rs.getString(6));
             }
         } catch (Exception e) {
+            e.printStackTrace();
         }
         return p;
     }
@@ -267,5 +276,89 @@ public class DAOImplementation implements DAOInterface, AutoCloseable {
             e.printStackTrace();
         }
         return productos;
+    }
+
+//    @Override
+//    public String insertaIngrediente(Ingrediente i) throws Exception {
+//        String insertado = "Ingrediente no insertado";
+//        String sql = "INSERT INTO ingrediente (nombre) VALUES (?);";
+//        try (PreparedStatement stm = con.prepareStatement(sql)) {
+//            stm.setString(1, i.getNombre());
+//            stm.executeUpdate();
+//            insertado = "Ingrediente insertado";
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return insertado;
+//    }
+//    @Override
+//    public boolean insertaIngrediente(Ingrediente i) throws Exception {
+//        boolean insertado = false;
+//        String sql = "INSERT INTO ingrediente (nombre) VALUES (?);";
+//        try (PreparedStatement stm = con.prepareStatement(sql)) {
+//            stm.setString(1, i.getNombre());
+//            int filasAfectadas = stm.executeUpdate();
+//            if (filasAfectadas > 0) {
+//                insertado = true;
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return insertado;
+//    }
+    @Override
+    public boolean insertaIngredientes(ArrayList<Ingrediente> al) throws Exception {
+        boolean insertado = false;
+        String sql = "INSERT INTO ingrediente (nombre) VALUES (?);";
+        try (PreparedStatement stm = con.prepareStatement(sql)) {
+            for (Ingrediente i : al) {
+                // Para verificar si el ingrediente ya existe en la base de datos
+                if (!existeIngrediente(i.getNombre())) {
+                    stm.setString(1, i.getNombre());
+                    int filasAfectadas = stm.executeUpdate();
+                    if (filasAfectadas > 0) {
+                        insertado = true;
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return insertado;
+    }
+
+    @Override
+    public boolean existeIngrediente(String nombre) throws Exception {
+        String sql = "SELECT COUNT(*) FROM ingrediente WHERE nombre = ?";
+        try (PreparedStatement stm = con.prepareStatement(sql)) {
+            stm.setString(1, nombre);
+            try (ResultSet rs = stm.executeQuery()) {
+                if (rs.next()) {
+                    int c = rs.getInt(1);
+                    return c > 0;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    @Override
+    public boolean verificarIngrediente(Ingrediente ingrediente) throws Exception {
+        boolean existe = false;
+        String sql = "SELECT COUNT(*) FROM ingrediente WHERE nombre = ?"; // Count. Si retorna mayor que 0 es porque el ingrediente existe
+        try (PreparedStatement stm = con.prepareStatement(sql)) {
+            stm.setString(1, ingrediente.getNombre());
+            try (ResultSet rs = stm.executeQuery()) {
+                if (rs.next()) {
+                    int nIngredientes = rs.getInt(1);
+                    existe = nIngredientes > 0;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return existe;
     }
 }

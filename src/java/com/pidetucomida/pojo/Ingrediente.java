@@ -18,6 +18,10 @@ public class Ingrediente {
         this.nombre = nombre;
     }
 
+    public Ingrediente() {
+
+    }
+
     public int getIdIngrediente() {
         return idIngrediente;
     }

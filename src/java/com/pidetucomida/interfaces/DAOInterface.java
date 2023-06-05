@@ -38,4 +38,12 @@ public interface DAOInterface {
     public ArrayList<Pedido> getPedidos() throws Exception;
 
     public boolean finalizarPedido(int idPedido) throws Exception;
+
+//    public String insertaIngrediente(Ingrediente i) throws Exception;
+//    public boolean insertaIngrediente(Ingrediente i) throws Exception;
+    public boolean insertaIngredientes(ArrayList<Ingrediente> ingredientes) throws Exception;
+
+    public boolean existeIngrediente(String nombre) throws Exception;
+
+    public boolean verificarIngrediente(Ingrediente ingrediente) throws Exception;
 }
