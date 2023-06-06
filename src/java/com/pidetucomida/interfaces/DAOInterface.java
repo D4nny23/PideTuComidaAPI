@@ -47,4 +47,6 @@ public interface DAOInterface {
 //    public ArrayList<Integer> getCantidadDeProductosPorPedido(int idPedido) throws Exception;
 
     public String insertaIngredienteAProducto(IngredienteProducto ip) throws Exception;
+
+    public void borrarProductoPorId(int idProducto) throws Exception;
 }

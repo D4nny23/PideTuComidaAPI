@@ -8,7 +8,6 @@ import com.pidetucomida.DAOImplementation.DAOImplementation;
 import com.pidetucomida.pojo.*;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
-import jakarta.ws.rs.core.Response;
 import java.util.ArrayList;
 
 /**
@@ -245,5 +244,16 @@ public class ApiService {
             e.printStackTrace();
         }
         return borrado;
+    }
+
+    @Path("/productos/borrar/{idProducto}")
+    @DELETE
+    public void borrarProductoPorId(@PathParam("idProducto") int idProducto) {
+        try (DAOImplementation imp = new DAOImplementation()) {
+            imp.borrarProductoPorId(idProducto);
+        } catch (Exception e) {
+            System.out.println("NO SE HA PODIDO BORRAR EL PRODUCTO");
+            e.printStackTrace();
+        }
     }
 }

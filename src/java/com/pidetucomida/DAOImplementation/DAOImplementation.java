@@ -401,4 +401,15 @@ public class DAOImplementation implements DAOInterface, AutoCloseable {
         }
         return borrado;
     }
+
+    @Override
+    public void borrarProductoPorId(int idProducto) throws Exception {
+        String sql = "DELETE FROM producto WHERE idProducto = ?;";
+        try (PreparedStatement stm = con.prepareStatement(sql)) {
+            stm.setInt(1, idProducto);
+            stm.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
