@@ -43,6 +43,7 @@ public class DAOImplementation implements DAOInterface, AutoCloseable {
                 productos.add(p);
             }
         } catch (Exception e) {
+            e.printStackTrace();
         }
         return productos;
     }
@@ -85,6 +86,7 @@ public class DAOImplementation implements DAOInterface, AutoCloseable {
                 c = new Cliente(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7));
             }
         } catch (Exception e) {
+            e.printStackTrace();
         }
         return c;
     }
@@ -102,6 +104,7 @@ public class DAOImplementation implements DAOInterface, AutoCloseable {
                 productos.add(p);
             }
         } catch (Exception e) {
+            e.printStackTrace();
         }
         return productos;
     }
@@ -159,6 +162,7 @@ public class DAOImplementation implements DAOInterface, AutoCloseable {
                 ingredientes.add(i);
             }
         } catch (Exception e) {
+            e.printStackTrace();
         }
         return ingredientes;
     }
@@ -208,10 +212,11 @@ public class DAOImplementation implements DAOInterface, AutoCloseable {
         String sql = "Select idPedido, fechaPedido, comentario, formaDePago, precioTotal from pedido where finalizado = 0;";
         try (Statement stm = con.createStatement(); ResultSet rs = stm.executeQuery(sql);) {
             while (rs.next()) {
-                p = new Pedido(rs.getInt("idPedido"), rs.getString("fechaPedido"), rs.getString("comentario"), rs.getString("formaDePago"), rs.getDouble("precioTotal"));
+                p = new Pedido(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getDouble(5));
                 pedidos.add(p);
             }
         } catch (Exception e) {
+            e.printStackTrace();
         }
         return pedidos;
     }
@@ -325,7 +330,6 @@ public class DAOImplementation implements DAOInterface, AutoCloseable {
                     pp.setCantidad(cantidad);
                     pp.setIdProducto(idProducto);
                     cantidades.add(pp);
-                    System.out.println("CANTIDAD: " + cantidades);
                 }
             }
 
@@ -336,40 +340,14 @@ public class DAOImplementation implements DAOInterface, AutoCloseable {
                     cantidades.add(pp);
                 }
             }
-
-            System.out.println("Cantidades -> " + cantidades);
         } catch (Exception e) {
             e.printStackTrace();
         }
         return cantidades;
     }
 
-//    @Override
-//    public ArrayList<Integer> getCantidadDeProductosPorPedido(int idPedido) throws Exception {
-//        ArrayList<Integer> cantidades = new ArrayList<>();
-////        Productos_pedido pp = null;
-//        String sql = "Select cantidad from producto_pedido where idPedido = ?;";
-//        try (PreparedStatement stm = con.prepareStatement(sql)) {
-//            stm.setInt(1, idPedido);
-//            try (ResultSet rs = stm.executeQuery()) {
-//                while (rs.next()) {
-//                    int cantidad = rs.getInt(1);
-////                    pp = new Productos_pedido();
-////                    pp.setCantidad(cantidad);
-//                    cantidades.add(cantidad);
-////                    System.out.println("CANTIDAD: " + pp.getIdProducto() + pp.getCantidad());
-//                    System.out.println("CANTIDAD:   " + cantidades);
-//                }
-//            }
-//            System.out.println("CAntidades -> " + cantidades);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return cantidades;
-//    }
     @Override
     public String insertaIngredienteAProducto(IngredienteProducto ip) throws Exception {
-
         String insertado = "Ingredientes no añadidos al producto " + ip.getIdProducto();
         String sql = "Insert into ingrediente_producto values(?,?)";
         try (PreparedStatement stm = con.prepareStatement(sql)) {
@@ -383,12 +361,11 @@ public class DAOImplementation implements DAOInterface, AutoCloseable {
             e.printStackTrace();
         }
         return insertado;
-
     }
 
     @Override
     public String finalizarPedido(int idPedido) throws Exception {
-        String borrado = "Pedido no borrado";
+        String borrado = "";
         String sql = "UPDATE pedido SET finalizado = 1 WHERE idPedido = ?";
         try (PreparedStatement stm = con.prepareStatement(sql)) {
             stm.setInt(1, idPedido);

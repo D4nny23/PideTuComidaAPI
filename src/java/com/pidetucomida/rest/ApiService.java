@@ -86,7 +86,6 @@ public class ApiService {
         }
         return productos;
     }
-//{"ruta":"/home/dev/Documentos/RelacionalV1.png","nombre":"Cheeseburger","idIngrediente":1,"precio":12.0, "tipo":"Hamburguesa"}
 
     @Path("/productos/insert")
     @POST
@@ -108,7 +107,6 @@ public class ApiService {
         Producto p = null;
         try (DAOImplementation imp = new DAOImplementation()) {
             p = imp.getProductoPorId(id);
-            // System.out.println("PRODUCTO POR ID:" + p.toString());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -136,7 +134,6 @@ public class ApiService {
         int insertado = 0;
         try (DAOImplementation ui = new DAOImplementation();) {
             insertado = ui.insertaPedido(p);
-            System.out.println("IDPEDIDO:::::::::::: " + insertado);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -150,7 +147,6 @@ public class ApiService {
         boolean insertado = false;
         try (DAOImplementation ui = new DAOImplementation();) {
             insertado = ui.insertaProductosPedido(pp);
-            System.out.println("PRODUCTOS_PEDIDO:::::::::::: " + pp.toString());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -221,18 +217,6 @@ public class ApiService {
         }
         return cantidades;
     }
-//    @Path("/pedidos/detalles_pedido/{idPedido}/productos/cantidad")
-//    @GET
-//    @Produces(MediaType.APPLICATION_JSON)
-//    public ArrayList<Integer> getCantidadDeProductosPorPedido(@PathParam("idPedido") int idPedido) {
-//        ArrayList<Integer> cantidades = new ArrayList<>();
-//        try (DAOImplementation imp = new DAOImplementation()) {
-//            cantidades = imp.getCantidadDeProductosPorPedido(idPedido);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return cantidades;
-//    }
 
     @Path("/pedidos/finalizarPedido/{idPedido}")
     @POST
@@ -252,7 +236,6 @@ public class ApiService {
         try (DAOImplementation imp = new DAOImplementation()) {
             imp.borrarProductoPorId(idProducto);
         } catch (Exception e) {
-            System.out.println("NO SE HA PODIDO BORRAR EL PRODUCTO");
             e.printStackTrace();
         }
     }

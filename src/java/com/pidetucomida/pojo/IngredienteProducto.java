@@ -38,5 +38,4 @@ public class IngredienteProducto {
     public void setAl(ArrayList<Integer> al) {
         this.al = al;
     }
-
 }
