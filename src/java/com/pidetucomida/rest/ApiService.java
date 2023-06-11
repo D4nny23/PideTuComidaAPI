@@ -105,7 +105,6 @@ public class ApiService {
         Producto p = null;
         try (DAOImplementation imp = new DAOImplementation()) {
             productos = imp.getProductosPorTipo(tipo);
-            System.out.println(productos.toString());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -145,7 +144,6 @@ public class ApiService {
         ArrayList<Ingrediente> ingredientes = null;
         try (DAOImplementation imp = new DAOImplementation()) {
             ingredientes = imp.getIngredientesPorProductId(id);
-            System.out.println(ingredientes.toString());
         } catch (Exception e) {
             e.printStackTrace();
         }
