@@ -61,11 +61,36 @@ public class ApiService {
     @Path("/cliente/{correo}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Cliente getProducto(@PathParam("correo") String correo) {
+    public Cliente getCliente(@PathParam("correo") String correo) {
         Cliente c = null;
         try (DAOImplementation imp = new DAOImplementation()) {
             c = imp.devuelveCliente(correo);
-            System.out.println(c.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return c;
+    }
+
+    @Path("/cliente/existeEmail/{correo}")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public boolean existeEmail(@PathParam("correo") String correo) {
+        boolean c = false;
+        try (DAOImplementation imp = new DAOImplementation()) {
+            c = imp.existeEmail(correo);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return c;
+    }
+
+    @Path("/cliente/existeNumero/{numero}")
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public boolean existeTelefono(@PathParam("numero") String numero) {
+        boolean c = false;
+        try (DAOImplementation imp = new DAOImplementation()) {
+            c = imp.existeNumero(numero);
         } catch (Exception e) {
             e.printStackTrace();
         }

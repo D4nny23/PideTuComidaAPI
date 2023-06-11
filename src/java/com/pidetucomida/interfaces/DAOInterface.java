@@ -18,6 +18,10 @@ public interface DAOInterface {
     public boolean insertaCliente(Cliente c) throws Exception;
 
     public Cliente devuelveCliente(String correo) throws Exception;
+    
+    public boolean existeEmail(String email) throws Exception;
+     
+    public boolean existeNumero(String numero) throws Exception;
 
     public Cliente devuelveClientePorIdPedido(int idPedido) throws Exception;
 

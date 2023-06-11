@@ -267,8 +267,7 @@ public class DAOImplementation implements DAOInterface, AutoCloseable {
         String sqlInsert = "INSERT INTO ingrediente (nombre) VALUES (?);";
         String sqlSelect = "SELECT idIngrediente FROM ingrediente WHERE nombre = ?;";
 
-        try (PreparedStatement stmInsert = con.prepareStatement(sqlInsert, Statement.RETURN_GENERATED_KEYS);
-                PreparedStatement stmSelect = con.prepareStatement(sqlSelect)) {
+        try (PreparedStatement stmInsert = con.prepareStatement(sqlInsert, Statement.RETURN_GENERATED_KEYS); PreparedStatement stmSelect = con.prepareStatement(sqlSelect)) {
 
             for (Ingrediente i : al) {
                 if (!existeIngrediente(i.getNombre())) {
@@ -388,5 +387,33 @@ public class DAOImplementation implements DAOInterface, AutoCloseable {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public boolean existeEmail(String email) throws Exception {
+        boolean c = false;
+        String sql = "Select idCliente, correo, pass, nombre, apellido, direccionEnvio, telefono from cliente where correo = '" + email + "'";
+        try (Statement stm = con.createStatement(); ResultSet rs = stm.executeQuery(sql);) {
+            while (rs.next()) {
+                c = true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return c;
+    }
+
+    @Override
+    public boolean existeNumero(String numero) throws Exception {
+        boolean c = false;
+        String sql = "Select idCliente, correo, pass, nombre, apellido, direccionEnvio, telefono from cliente where telefono = '" + numero + "'";
+        try (Statement stm = con.createStatement(); ResultSet rs = stm.executeQuery(sql);) {
+            while (rs.next()) {
+                c = true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return c;
     }
 }
